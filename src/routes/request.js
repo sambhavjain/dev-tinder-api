@@ -4,6 +4,7 @@ const { userAuth } = require('../middleware/auth');
 const ConnectionRequest = require('../models/ConnectionRequest');
 const { validateConnectionRequest, validateReviewConnectionRequest } = require('../utils/validation');
 const User = require('../models/User');
+const sendEmail = require('../utils/sendEmail');
 
 requestRouter.post('/send/:status/:toUserId', userAuth, async (req, res) => {
     const user = req.user;
@@ -34,6 +35,9 @@ requestRouter.post('/send/:status/:toUserId', userAuth, async (req, res) => {
             status: status
         })
         const savedConnectionRequest = await connectionRequest.save();
+
+        const emailResponse = await sendEmail.run(toUser.email, 'sambhav@sambhav.space');
+        console.log(emailResponse);
         res.status(200).json({ savedConnectionRequest })
     } catch (error) {
         res.status(400).json({ message: 'FAILED TO SEND INTERESTED REQUEST', error: error.message })

@@ -80,7 +80,7 @@ userSchema.methods.validatePassword = async function(password) {
 }
 
 userSchema.methods.getJwtToken = async function() {
-    const token = await jwt.sign({ _id: this._id}, "DEV_TINDER_SECRET_KEY", { expiresIn: '24h' })
+    const token = await jwt.sign({ _id: this._id}, process.env.JWT_SECRET_KEY, { expiresIn: '24h' })
     return token;
 }
 
